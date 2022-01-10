@@ -117,6 +117,10 @@ saveFile = () => {
   }
   xhr.send(val)
 }
+opensite=(url)=>{
+window.focus();
+window.open(url,"_blank")
+}
 fileReq = (filename,mode) => {
   while(filename.includes("/")||filename.includes("php")){window.alert(`error processing ${filename}.\nphp or / are not permitted.`)}
   if(mode=="web"){
@@ -192,6 +196,13 @@ async function webUp(p,devicename){
     .accordion:active{
         filter: brightness(140%);
     }
+	a{
+		color:cyan;
+	}
+	a:hover{
+		color:lightgray;
+		cursor:url("data:image/x-icon;base64,AAABAAEAERYAAAEAIABYBgAAFgAAACgAAAARAAAALAAAAAEAIAAAAAAA2AUAAMIeAADCHgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABoGA7oaBgP/GgYD/xoGA/8aBgP/GgYD/xoGA/8aBgP/GgYD/xoGA7oAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaBgMGGgYD3uLi4v/f39//3d3d/9vb2//Z2dn/2NjY/9bW1v/U1NT/GgYD4QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABoGA2MaBgOH5eXl/+Pj4//h4eH/39/f/93d3f/b29v/2dnZ/9fX1/8aBgPeGgYDMAAAAAAAAAAAAAAAAAAAAAAaBgMGGgYD3sC7u//p6en/5+fn/+Xl5f/i4uL/4ODg/97e3v/c3Nz/2tra/xoGA4caBgOHAAAAAAAAAAAAAAAAAAAAABoGA2MaBgO07+/v/+3t7f/r6+v/6Ojo/+bm5v/k5OT/4uLi/9/f3//d3d3/sq6t/xoGA9UAAAAAAAAAAAAAAAAaBgMGGgYD3sfCwv/z8/P/8fHx/+/v7//s7Oz/6urq/+jo6P/l5eX/4+Pj/+Hh4f/f39//GgYD3hoGAzAAAAAAAAAAABoGA2MaBgO0+Pj4//b29v/09PT/8vLy//Dw8P/u7u7/7Ozs/+np6f/n5+f/5eXl/+Li4v8aBgOHGgYDhwAAAAAAAAAAGgYD3szIx//7+/v/+fn5//j4+P/29vb/9PT0//Hx8f/v7+//7e3t/+vr6//o6Oj/5ubm/7m1tP8aBgPVAAAAABoGA2MaBgO0/v7+/83JyP/8/Pz/+vr6//n5+f/39/f/9fX1//Pz8//x8fH/7+/v/+zs7P/q6ur/6Ojo/xoGA/8aBgM2GgYDuujm5f//////hnt6//7+/v/9/f3/+/v7//r6+v/4+Pj/9vb2//T09P/y8vL/8PDw/+7u7v/s7Oz/GgYD/xoGA7ro5uX///////////8aBgP////////////+/v7//Pz8//v7+//5+fn/+Pj4//b29v/09PT/8fHx/+/v7/8aBgP/GgYD/+jm5f/o5uX/GgYDuhoGA//////////////////+/v7//f39//z8/P/6+vr/+fn5/xoGA//19fX/8/Pz/xoGA/8aBgO6GgYD/xoGA7oaBgM2GgYD////////////GgYD////////////GgYD//39/f/7+/v/GgYD//j4+P/Hw8P/GgYDugAAAAAAAAAAAAAAAAAAAAAaBgP///////////8aBgP///////////8aBgP///////7+/v8aBgP/y8fG/xoGA7oaBgMaAAAAAAAAAAAAAAAAAAAAABoGA////////////xoGA////////////xoGA///////z8rK/xoGA/8aBgO6GgYDGgAAAAAAAAAAAAAAAAAAAAAAAAAAGgYD////////////GgYD///////Pysr/GgYDuhoGA/8aBgO6GgYDNgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaBgP///////////8aBgP/GgYD/xoGA7oaBgM2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABoGA////////////xoGA/8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGgYD////////////GgYD/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaBgP///////////8aBgP/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABoGA7r//////////xoGA7oAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGgYDNhoGA7oaBgO6GgYDNgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPgBgADwAYAA8ACAAOAAgADgAIAAwAAAAMAAAADAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAADwAAAA8ACAAPADgADwH4AA8P+AAPD/gADw/4AA8P+AAPD/gAA="),pointer;
+	}
     .panel {
         background-image: linear-gradient(90deg, #5c5c5c 0%, #2b2b2b 55%, #000000 100%);
       padding: 0 18px;
@@ -202,21 +213,24 @@ async function webUp(p,devicename){
     }`
     opend.document.head.appendChild(styletobe);
     req = await request(`GET`,`webhistory/${devicename}_history`)
-    var parsed = JSON.parse(req)
+    //console.log(req,JSON.parse(req))
+	var parsed = JSON.parse(req)
     parsed = parsed.history;
+	//console.log(parsed)
     var toAppend = ``
-    for(var i=parsed.length-1;i>0;i--){
-      toAppend += `<button class="accordion">${parsed[i].URL}</button><div class="panel">
-      <a href="${parsed[i].URL}">visit site</a><br><p id="p${i}" onclick="window.alert(${singlequote}unformatted date:\n${parsed[i].Timestamp})"style="#p${i}::hover{filter:brightness(80%);cursor:pointer}">accessed on: ${format_date(parsed[i].Timestamp)}</p>
+	for(var i=parsed.length-1;i>=0;i--){
+      toAppend += `<button onclick="(async () => {document.querySelector(${singlequote}#title${i.toString()+singlequote}).innerText=${singlequote}page title: ${singlequote}+await window.opener.title_get(${singlequote+parsed[i].URL+singlequote})})()" class="accordion">${parsed[i].URL}</button><div class="panel">
+      <a onclick="window.opener.opensite(${singlequote+parsed[i].URL+singlequote})">visit site</a><br><p id="title${i}">loading...</p><br><p id="p${i}" onclick="window.alert(${singlequote}unformatted date:\n${parsed[i].Timestamp})"style="#p${i}::hover{filter:brightness(80%);cursor:pointer}">accessed on: ${format_date(parsed[i].Timestamp)}</p>
       </div>`;
     }
+	//console.log(toAppend)
     opend.document.body.innerHTML = toAppend;
     element = document.createElement("script")
     element.innerText = `var acc = document.getElementsByClassName("accordion");var i;for (i = 0; i < acc.length; i++) {  acc[i].addEventListener("click", function() {    this.classList.toggle("active");    var panel = this.nextElementSibling;    if (panel.style.maxHeight) {      panel.style.maxHeight = null;    } else {      panel.style.maxHeight = panel.scrollHeight + "px";    }   })}`
     opend.document.body.appendChild(element)
 }
-display_programs = (products,dialog_element)=>{
-console.log(products,dialog_element);
+title_get = async url => {
+return await window.request("GET","geturltitle.php?url="+url);
 }
 async function changeHTML(p) {
   var orig = document.querySelector(`#box${p}`).innerHTML.replaceAll(`"`,"");
@@ -316,4 +330,3 @@ echo '<dialog id="file"><h2>what to choose?</h2><br><select>
 </select><br><button onclick="handler()">process</button><button onclick="document.querySelector(`#file`).close()">close</button></dialog>';
 echo '<dialog id="filepicker"><h2>web history files</h2><hr><div id="filediv"></div><button onclick="document.querySelector(`#filepicker`).close()">close</button></dialog><dialog id="notes_dialog"><h2 id="notes_header"></h2><textarea id="notes_area" ></textarea><br><button onclick="save_note()">save & close</button></dialog>';
 echo '</body></html>';
-?>
